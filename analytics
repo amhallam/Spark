@@ -1,0 +1,11 @@
+#imports
+from pyspark.sql.functions import year
+
+#read parquet 
+peopleDF = spark.read.parquet("/mnt/training/dataframes/people-10m.parquet")
+display(peopleDF)
+peopleDF.printSchema()
+
+#queries
+from pyspark.sql.functions  import year, avg , max , min , sum
+peopleDF.select("*").filter("gender == 'F'").filter(year("birthDate") > 1990 ).select(min(year("birthDate"))).show(10)
