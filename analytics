@@ -9,3 +9,6 @@ peopleDF.printSchema()
 #queries
 from pyspark.sql.functions  import year, avg , max , min , sum
 peopleDF.select("*").filter("gender == 'F'").filter(year("birthDate") > 1990 ).select(min(year("birthDate"))).show(10)
+
+#temporary views
+peopleDF.createOrReplaceTempView("People10M")
