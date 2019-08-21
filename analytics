@@ -12,3 +12,14 @@ peopleDF.select("*").filter("gender == 'F'").filter(year("birthDate") > 1990 ).s
 
 #temporary views
 peopleDF.createOrReplaceTempView("People10M")
+display(spark.sql("SELECT * FROM  People10M WHERE firstName = 'Donna' "))
+
+from pyspark.sql.functions import count, desc
+
+top10FemaleFirstNamesDF = (peopleDF
+                           .select("firstName")
+                          .filter("gender = 'F'")
+                          .groupBy("firstName")
+                          .count()
+                          .limit(10)
+                          .show())
