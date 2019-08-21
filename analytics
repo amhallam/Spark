@@ -23,3 +23,7 @@ top10FemaleFirstNamesDF = (peopleDF
                           .count()
                           .limit(10)
                           .show())
+                          
+top10FemaleFirstNamesDF.createOrReplaceTempView("Top10FemaleFirstNames")
+resultsDF = spark.sql("select * from Top10FemaleFirstNames")
+display(resultsDF)
