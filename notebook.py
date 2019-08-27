@@ -27,3 +27,28 @@ top10FemaleFirstNamesDF = (peopleDF
 top10FemaleFirstNamesDF.createOrReplaceTempView("Top10FemaleFirstNames")
 resultsDF = spark.sql("select * from Top10FemaleFirstNames")
 display(resultsDF)
+
+##############################################
+##Starting with peopleDF, create a DataFrame called carensDF where:
+
+##The result set has a single record.
+##The data set has a single column named total.
+##The result counts only
+##Females (gender)
+##First Name is "Caren" (firstName)
+##Born before March 1980 (birthDate)
+###################################################
+
+
+from pyspark.sql.functions import *
+#print(peopleDF.filter("gender='F' and firstName='Caren'").show(20))
+carensDF = peopleDF.filter("gender='F' and firstName='Caren'")\
+.filter(\
+  (year(col("birthDate")) < 1980)  | \
+  ((year(col("birthDate")) == 1980) & (month(col("birthDate")) < 3))\
+       )\
+.agg(count("*").alias("total"))
+carensDF.show()
+
+##another of doing this : 
+peopleDF.createOrReplaceTempView("peopleDF")
