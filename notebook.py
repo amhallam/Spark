@@ -52,3 +52,12 @@ carensDF.show()
 
 ##another of doing this : 
 peopleDF.createOrReplaceTempView("peopleDF")
+
+
+from pyspark.sql.functions import col, max, desc
+maxNamesDF = ssaDF.select("total","year").filter("year in  (1885, 1915, 1945, 1975,  2005)").groupBy("year").max().orderBy("max(total)" , ascending=False).withColumnRenamed("year","max_year").withColumnRenamed("max(total)","max_total")
+maxNamesDF.show(10)
+outerQueryDF = ssaDF.join(maxNamesDF, (col("year") == col("max_year"))  & (col("max_total") == col("total")))
+outerQueryDF.show(5)
+
+
