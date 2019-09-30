@@ -61,3 +61,20 @@ outerQueryDF = ssaDF.join(maxNamesDF, (col("year") == col("max_year"))  & (col("
 outerQueryDF.show(5)
 
 
+
+#in json when categories is an Array - denorm , count group by
+from pyspark.sql.functions import *
+databricksBlogDFExp = databricksBlogDF.select("title",explode(col("categories")).alias("categ"))
+databricksBlogDFExp.groupBy("categ").count().orderBy("count" , ascending=False).show()
+databricksBlogDFExp.show()
+
+
+# Explode function
+from pyspark.sql.functions import explode , col
+uniqueCategoriesDF = databricksBlogDF.select("title",explode(("categories")) ).distinct()
+display(uniqueCategoriesDF)
+
+
+# filter contains - explode
+from pyspark.sql.functions import array_contains
+articlesByMichaelDF = databricksBlogDF.select("title" , explode(col("authors")).alias("author")).filter(col("author") == "Michael Armbrust")
