@@ -78,3 +78,10 @@ display(uniqueCategoriesDF)
 # filter contains - explode
 from pyspark.sql.functions import array_contains
 articlesByMichaelDF = databricksBlogDF.select("title" , explode(col("authors")).alias("author")).filter(col("author") == "Michael Armbrust")
+
+
+
+#nested columns
+from pyspark.sql.functions import date_format
+display(databricksBlogDF.select("title",date_format("dates.publishedOn","yyyy-MM-dd").alias("publishedOn")))
+display(databricksBlogDF.select("dates.createdOn", "dates.publishedOn"))
