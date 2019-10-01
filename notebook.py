@@ -85,3 +85,14 @@ articlesByMichaelDF = databricksBlogDF.select("title" , explode(col("authors")).
 from pyspark.sql.functions import date_format
 display(databricksBlogDF.select("title",date_format("dates.publishedOn","yyyy-MM-dd").alias("publishedOn")))
 display(databricksBlogDF.select("dates.createdOn", "dates.publishedOn"))
+
+
+# contains
+from pyspark.sql.functions import lower, upper, month, col
+
+homicidesNewYorkDF = (crimeDataNewYorkDF 
+  .select(month(col("reportDate")).alias("month"), col("offenseDescription").alias("offense")) 
+  .filter(lower(col("offenseDescription")).contains("murder") | lower(col("offenseDescription")).contains("homicide"))
+)
+
+display(homicidesNewYorkDF)
