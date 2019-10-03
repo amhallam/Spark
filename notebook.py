@@ -96,3 +96,23 @@ homicidesNewYorkDF = (crimeDataNewYorkDF
 )
 
 display(homicidesNewYorkDF)
+
+# TODO
+
+# rename "city" column to "cities" to avoid having two similarly named cols; also columns are case-blind
+cityDataDF = spark.read.parquet("dbfs:/mnt/training/City-Data.parquet").withColumnRenamed("city", "cities")
+#display(cityDataDF)
+robberyRatesByCityDF = combinedRobberiesByMonthDF.join(cityDataDF.select("estPopulation2016","cities"), col("city")==col("cities"))
+display(robberyRatesByCityDF.select("city","month","robberies","estPopulation2016").withColumn("robberies_per_capita",lit(col("robberies")/col("estPopulation2016"))*100).select("city","month","robberies_per_capita"))
+
+
+from pyspark.sql.functions import lit
+robberiesByMonthPhiladelphiaDF_new = robberiesByMonthPhiladelphiaDF.withColumn("city", lit("Philadelphia"))
+robberiesByMonthDallasDF_new = robberiesByMonthDallasDF.withColumn("city", lit("Dallas"))
+robberiesByMonthLosAngelesDF_new = robberiesByMonthLosAngelesDF.withColumn("city", lit("Los Angeles"))
+combinedRobberiesByMonthDF =  robberiesByMonthLosAngelesDF_new.select( "city","month","robberies").union(robberiesByMonthPhiladelphiaDF_new.select( "city","month","robberies").union(robberiesByMonthDallasDF_new.select( "city","month","robberies")))
+
+
+
+
+
